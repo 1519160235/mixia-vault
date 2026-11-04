@@ -26,13 +26,12 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      # GitHub 的 ubuntu-latest 已预装 Android SDK，无需第三方 action
+      # GitHub 的 ubuntu-latest 已预装 Android SDK
       - name: Locate Android SDK
         run: |
           SDK="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
           echo "ANDROID_HOME=$SDK" >> "$GITHUB_ENV"
           echo "ANDROID_SDK_ROOT=$SDK" >> "$GITHUB_ENV"
-          ls "$SDK/platforms" || true
 
       - name: Install platform 34
         run: |
@@ -41,7 +40,10 @@ jobs:
             yes | "$SDK/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null 2>&1 || true
             yes | "$SDK/cmdline-tools/latest/bin/sdkmanager" "platforms;android-34" "build-tools;34.0.0" > /dev/null 2>&1 || true
           fi
-          ls "$SDK/platforms" || true
+
+      # Windows 上提交的 gradlew 没有可执行位，这里补上并用 bash 调用
+      - name: Make gradlew executable
+        run: chmod +x gradlew
 
       # 公开仓库不保存签名密钥：从 GitHub Secrets 还原。
       # 未配置时 release 会退回 debug 签名，仍可安装。
@@ -59,7 +61,7 @@ jobs:
           fi
 
       - name: Build debug APK
-        run: ./gradlew :app:assembleDebug --no-daemon --stacktrace
+        run: bash ./gradlew :app:assembleDebug --no-daemon --stacktrace
 
       - name: Build release APK
         if: github.event_name != 'pull_request'
@@ -67,7 +69,7 @@ jobs:
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-        run: ./gradlew :app:assembleRelease --no-daemon --stacktrace
+        run: bash ./gradlew :app:assembleRelease --no-daemon --stacktrace
 
       - name: Collect artifacts
         run: |
