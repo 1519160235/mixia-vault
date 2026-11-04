@@ -261,13 +261,19 @@
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
-            <Button
+            <TextView
                 android:id="@+id/btnDelete"
-                style="@style/DangerButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
+                android:layout_height="52dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/btn_danger_solid"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
                 android:text="删除这条记录"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 android:visibility="gone" />
         </LinearLayout>
     </ScrollView>

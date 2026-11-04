@@ -19,6 +19,7 @@ import com.mixia.vault.util.AppDialog;
 import com.mixia.vault.util.ClipboardHelper;
 import com.mixia.vault.util.PasswordTools;
 import com.mixia.vault.util.PhotoViewer;
+import com.mixia.vault.util.PressFeedback;
 import com.mixia.vault.util.Ui;
 
 /** Read-only detail sheet, drawn with the app's own dark styling. */
@@ -95,12 +96,14 @@ public final class EntryDetailDialog {
         buttons.addView(edit, new LinearLayout.LayoutParams(0, Ui.dp(activity, 48), 1f));
 
         TextView delete = new TextView(activity);
-        delete.setBackgroundResource(R.drawable.btn_danger);
+        delete.setBackgroundResource(R.drawable.btn_danger_solid);
         delete.setText("删除");
         delete.setGravity(Gravity.CENTER);
-        delete.setTextColor(0xFFEF5B6B);
+        delete.setTextColor(0xFFFFFFFF);
         delete.setTextSize(15);
         delete.setClickable(true);
+        PressFeedback.attach(delete);
+        PressFeedback.attach(edit);
         delete.setOnClickListener(v -> AppDialog.confirm(activity, "删除记录",
                 "确定删除「" + entry.title + "」？照片也会一起删除。", "删除", true, () -> {
                     for (String path : entry.photos) PhotoStore.delete(path);

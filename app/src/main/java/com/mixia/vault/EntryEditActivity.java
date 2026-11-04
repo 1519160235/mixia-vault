@@ -127,6 +127,7 @@ public class EntryEditActivity extends BaseActivity {
             TextView delete = findViewById(R.id.btnDelete);
             delete.setVisibility(View.VISIBLE);
             delete.setOnClickListener(v -> confirmDelete());
+            com.mixia.vault.util.PressFeedback.attach(delete);
         }
         syncChips();
         updateStrength();
@@ -367,7 +368,7 @@ public class EntryEditActivity extends BaseActivity {
 
     private void confirmDelete() {
         AppDialog.confirm(this, "删除记录",
-                "确定删除「" + entry.title + "」？此操作不可撤销。", "删除", true, () -> {
+                "「" + entry.title + "」及其照片将被永久删除，无法恢复。", "删除", true, () -> {
                     for (String path : entry.photos) PhotoStore.delete(path);
                     app.vault().removeEntry(entry.id);
                     saved = true;

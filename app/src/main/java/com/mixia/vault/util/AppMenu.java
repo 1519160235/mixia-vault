@@ -64,6 +64,11 @@ public final class AppMenu {
             } else {
                 subtitle.setText(item.subtitle);
             }
+            row.setClickable(true);
+            if (item.danger) {
+                row.setBackgroundResource(R.drawable.menu_row_danger_bg);
+            }
+            PressFeedback.attach(row);
             row.setOnClickListener(v -> {
                 dialog.dismiss();
                 if (item.action != null) item.action.run();
@@ -74,7 +79,9 @@ public final class AppMenu {
             container.addView(row, lp);
         }
 
-        dialog.findViewById(R.id.menuCancel).setOnClickListener(v -> dialog.dismiss());
+        View cancel = dialog.findViewById(R.id.menuCancel);
+        PressFeedback.attach(cancel);
+        cancel.setOnClickListener(v -> dialog.dismiss());
 
         Window window = dialog.getWindow();
         if (window != null) {

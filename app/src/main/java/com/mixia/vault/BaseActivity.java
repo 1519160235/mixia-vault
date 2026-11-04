@@ -42,13 +42,16 @@ public class BaseActivity extends Activity {
     @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
-        applyInsets(((android.view.ViewGroup) findViewById(android.R.id.content)).getChildAt(0));
+        android.view.View root = ((android.view.ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
+        applyInsets(root);
+        com.mixia.vault.util.PressFeedback.attachAll(root);
     }
 
     @Override
     public void setContentView(View view) {
         super.setContentView(view);
         applyInsets(view);
+        com.mixia.vault.util.PressFeedback.attachAll(view);
     }
 
     /** Adds status-bar / cutout / navigation-bar padding to the page root. */

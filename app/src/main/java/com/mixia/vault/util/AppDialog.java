@@ -203,7 +203,10 @@ public final class AppDialog {
             }
 
             primary.setText(positiveText);
-            if (danger) primary.setBackgroundResource(R.drawable.btn_danger);
+            if (danger) {
+                primary.setBackgroundResource(R.drawable.btn_danger_solid);
+                primary.setTextColor(0xFFFFFFFF);
+            }
             primary.setOnClickListener(v -> {
                 dialog.dismiss();
                 if (onPositive != null) onPositive.run();
@@ -228,6 +231,8 @@ public final class AppDialog {
                         ViewGroup.LayoutParams.MATCH_PARENT, Ui.dp(activity, 48)));
             }
             if (buttons != null) buttons.setVisibility(View.VISIBLE);
+            PressFeedback.attach(primary);
+            PressFeedback.attach(negative);
 
             Window window = dialog.getWindow();
             if (window != null) {
