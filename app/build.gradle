@@ -1,0 +1,79 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.mixia.vault'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.mixia.vault"
+        minSdk 26
+        targetSdk 34
+        versionCode 2
+        versionName "1.1"
+    }
+
+    // 签名密钥不随公开仓库发布（.gitignore 已排除 keystore/）。
+    // 本地：keystore/mixia-release.jks 存在时自动使用。
+    // CI  ：通过环境变量注入（见 .github/workflows/build-apk.yml）。
+    def envKeyFile = System.getenv("SIGNING_KEY_FILE")
+    def keyFile = envKeyFile != null && !envKeyFile.isEmpty()
+            ? file(envKeyFile)
+            : file("../keystore/mixia-release.jks")
+    def keyStorePassword = System.getenv("SIGNING_STORE_PASSWORD")
+    def keyAliasName = System.getenv("SIGNING_KEY_ALIAS")
+    def keyPasswordValue = System.getenv("SIGNING_KEY_PASSWORD")
+    def hasKey = keyFile.exists()
+
+    signingConfigs {
+        if (hasKey) {
+            release {
+                storeFile keyFile
+                storePassword keyStorePassword != null ? keyStorePassword : "mixia2026"
+                keyAlias keyAliasName != null ? keyAliasName : "mixia"
+                keyPassword keyPasswordValue != null ? keyPasswordValue : "mixia2026"
+            }
+            debug {
+                storeFile keyFile
+                storePassword keyStorePassword != null ? keyStorePassword : "mixia2026"
+                keyAlias keyAliasName != null ? keyAliasName : "mixia"
+                keyPassword keyPasswordValue != null ? keyPasswordValue : "mixia2026"
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            if (hasKey) {
+                signingConfig signingConfigs.release
+            }
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            if (hasKey) {
+                signingConfig signingConfigs.debug
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildFeatures {
+        buildConfig false
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            outputFileName = "MixiaVault-${variant.versionName}-${variant.buildType.name}.apk"
+        }
+    }
+}
+
+// 本应用刻意不引入任何第三方依赖：无网络库、无广告 SDK、无分析 SDK。
+dependencies {
+}

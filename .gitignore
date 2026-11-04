@@ -1,0 +1,35 @@
+# ---- 构建产物 ----
+.build/
+.gradle/
+build/
+app/build/
+*.iml
+*.hprof
+captures/
+.externalNativeBuild/
+.cxx/
+
+# ---- 本机工具链（很大，绝不提交）----
+.toolchain/
+
+# ---- 签名密钥：公开仓库请勿提交 ----
+keystore/
+*.jks
+*.keystore
+local.properties
+
+# ---- 编辑器 / 系统 ----
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+
+# ---- 本机构建缓存 / 临时 ----
+.tmp/
+.android-home/
+.gradle/
+local.properties
+*.log
+# 构建产物不提交，由 GitHub Actions 生成
+dist/*.apk
+dist/*.idsig

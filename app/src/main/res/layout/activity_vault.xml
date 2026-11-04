@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_app">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="6dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:paddingRight="12dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.16"
+                    android:text="@string/app_name"
+                    android:textColor="@color/text"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/subtitleText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:textColor="@color/text_dim"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/btnSort"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:contentDescription="排序"
+                android:src="@drawable/ic_sort"
+                android:tint="@color/text_dim" />
+
+            <ImageButton
+                android:id="@+id/btnMenu"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:contentDescription="菜单"
+                android:src="@drawable/ic_more"
+                android:tint="@color/text_dim" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/input_bg"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="14dp"
+            android:paddingRight="10dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:contentDescription="搜索"
+                android:src="@drawable/ic_search"
+                android:tint="@color/text_faint" />
+
+            <EditText
+                android:id="@+id/searchInput"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="搜索标题、账号、网址…"
+                android:imeOptions="actionSearch"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textColor="@color/text"
+                android:textColorHint="@color/text_faint"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/chips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp" />
+        </HorizontalScrollView>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="6dp"
+            android:layout_weight="1">
+
+            <ListView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="10dp"
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="100dp"
+                android:scrollbars="none" />
+
+            <LinearLayout
+                android:id="@+id/emptyView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="58dp"
+                    android:layout_height="58dp"
+                    android:alpha="0.35"
+                    android:contentDescription="空"
+                    android:src="@drawable/ic_shield"
+                    android:tint="@color/text_dim" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="保险库是空的"
+                    android:textColor="@color/text_dim"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="点右下角 + 添加第一条记录"
+                    android:textColor="@color/text_faint"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </FrameLayout>
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/fab"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="24dp"
+        android:background="@drawable/fab_bg"
+        android:contentDescription="添加"
+        android:src="@drawable/ic_add"
+        android:tint="#062B25" />
+</FrameLayout>

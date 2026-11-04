@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_app"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingRight="12dp">
+
+        <ImageButton
+            android:id="@+id/btnBackD"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="返回"
+            android:src="@drawable/ic_back"
+            android:tint="@color/text" />
+
+        <TextView
+            android:id="@+id/detailTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/text"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/btnDeleteWallet"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="删除"
+            android:src="@drawable/ic_delete"
+            android:tint="@color/danger" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingTop="6dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="40dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/input_bg"
+                android:orientation="horizontal"
+                android:padding="13dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginTop="1dp"
+                    android:contentDescription="警告"
+                    android:src="@drawable/ic_alert"
+                    android:tint="@color/accent2" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="9dp"
+                    android:layout_weight="1"
+                    android:lineSpacingExtra="3dp"
+                    android:text="谁拿到这串单词，谁就拥有钱包里的资产。请抄写在纸上并离线保存，不要截图。"
+                    android:textColor="@color/accent2"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/LabelText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="助记词" />
+
+            <TextView
+                android:id="@+id/wordsText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/card_bg"
+                android:fontFamily="monospace"
+                android:lineSpacingExtra="9dp"
+                android:padding="16dp"
+                android:textColor="@color/text"
+                android:textIsSelectable="false"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnRevealWords"
+                    style="@style/GhostButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="显示助记词" />
+
+                <Button
+                    android:id="@+id/btnCopyWords"
+                    style="@style/GhostButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:text="复制助记词" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/LabelText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="币种 / 派生路径" />
+
+            <Spinner
+                android:id="@+id/coinSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/input_bg" />
+
+            <EditText
+                android:id="@+id/pathInput"
+                style="@style/FieldEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="monospace"
+                android:hint="m/44'/60'/0'/0/0"
+                android:importantForAutofill="no"
+                android:inputType="textNoSuggestions" />
+
+            <TextView
+                style="@style/LabelText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BIP39 附加密码（可选，可为空）" />
+
+            <EditText
+                android:id="@+id/passInput"
+                style="@style/FieldEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="第 25 个词，留空表示没有"
+                android:importantForAutofill="no"
+                android:inputType="textPassword" />
+
+            <Button
+                android:id="@+id/btnDerive"
+                style="@style/PrimaryButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="重新计算地址" />
+
+            <TextView
+                android:id="@+id/statusText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/text_faint"
+                android:textSize="12sp" />
+
+            <TextView
+                style="@style/LabelText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="地址" />
+
+            <TextView
+                android:id="@+id/addrText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/card_bg"
+                android:fontFamily="monospace"
+                android:padding="14dp"
+                android:textColor="@color/accent"
+                android:textIsSelectable="true"
+                android:textSize="13sp" />
+
+            <TextView
+                style="@style/LabelText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="私钥（Hex）" />
+
+            <TextView
+                android:id="@+id/privText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/card_bg"
+                android:fontFamily="monospace"
+                android:padding="14dp"
+                android:textColor="@color/text"
+                android:textIsSelectable="true"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/wifLabel"
+                style="@style/LabelText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="私钥（WIF）"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/wifText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/card_bg"
+                android:fontFamily="monospace"
+                android:padding="14dp"
+                android:textColor="@color/text"
+                android:textIsSelectable="true"
+                android:textSize="13sp"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btnCopyPriv"
+                style="@style/GhostButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="复制私钥" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:lineSpacingExtra="3dp"
+                android:text="提示：只保存助记词即可恢复钱包，私钥仅用于导入到其他钱包或应急。派生过程完全在本机离线完成。"
+                android:textColor="@color/text_faint"
+                android:textSize="11sp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
