@@ -17,10 +17,11 @@ android {
     // 签名密钥不随公开仓库发布（.gitignore 已排除 keystore/）。
     // 本地：keystore/mixia-release.jks 存在时自动使用。
     // CI  ：通过环境变量注入（见 .github/workflows/build-apk.yml）。
+    // 注意：环境变量里的相对路径按「仓库根目录」解析（CI 里就是 $GITHUB_WORKSPACE）
     def envKeyFile = System.getenv("SIGNING_KEY_FILE")
     def keyFile = envKeyFile != null && !envKeyFile.isEmpty()
-            ? file(envKeyFile)
-            : file("../keystore/mixia-release.jks")
+            ? rootProject.file(envKeyFile)
+            : rootProject.file("keystore/mixia-release.jks")
     def keyStorePassword = System.getenv("SIGNING_STORE_PASSWORD")
     def keyAliasName = System.getenv("SIGNING_KEY_ALIAS")
     def keyPasswordValue = System.getenv("SIGNING_KEY_PASSWORD")
