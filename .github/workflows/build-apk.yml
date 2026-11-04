@@ -35,23 +35,43 @@ jobs:
 
       - name: Install SDK platform 37 and build-tools
         run: |
+          set -e
           SDK="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
           SM="$SDK/cmdline-tools/latest/bin/sdkmanager"
           if [ -x "$SM" ]; then
             yes | "$SM" --licenses > /dev/null 2>&1 || true
             yes | "$SM" "platforms;android-34" "build-tools;34.0.0" > /dev/null 2>&1 || true
-            # Android 17 (API 37)。若 runner 上的 sdkmanager 版本太旧装不上，
-            # 下面会回退到 compileSdk 34 继续构建，保证仍能出包。
-            yes | "$SM" "platforms;android-37.0" "build-tools;37.0.0" > /dev/null 2>&1 || true
           fi
-          if [ ! -d "$SDK/platforms/android-37" ]; then
-            echo "API 37 unavailable on this runner -> falling back to compileSdk 34"
-            echo "FALLBACK_SDK=34" >> "$GITHUB_ENV"
+
+          # GitHub runner 自带的 sdkmanager 往往太旧，包清单里还没有 API 37。
+          # 这里直接从 dl.google.com 下载并解包，行为与本地构建完全一致。
+          if [ ! -f "$SDK/platforms/android-37/android.jar" ]; then
+            echo "downloading Android 17 (API 37) platform directly"
+            mkdir -p /tmp/sdk37 && cd /tmp/sdk37
+            curl -fsSL -o platform-37.zip "https://dl.google.com/android/repository/platform-37.0_r02.zip"
+            curl -fsSL -o build-tools-37.zip "https://dl.google.com/android/repository/build-tools_r37_windows.zip" || true
+            unzip -q -o platform-37.zip
+            mkdir -p "$SDK/platforms/android-37"
+            cp -r android-37.0/* "$SDK/platforms/android-37/"
+            # 生成 package.xml，AGP 靠它识别 SDK 平台
+            sed -e 's#path="platforms;android-34"#path="platforms;android-37"#' \
+                -e 's#<api-level>34</api-level>#<api-level>37</api-level>#' \
+                -e 's#<extension-level>7</extension-level>#<extension-level>22</extension-level>#' \
+                -e 's#<major>3</major>#<major>2</major>#' \
+                -e 's#Android SDK Platform 34, rev 3#Android SDK Platform 37, rev 2#' \
+                "$SDK/platforms/android-34/package.xml" > "$SDK/platforms/android-37/package.xml"
           fi
-          echo "--- installed platforms ---"
-          ls "$SDK/platforms" || true
-          echo "--- installed build-tools ---"
-          ls "$SDK/build-tools" || true
+
+          # build-tools：优先用 34（功能足够），没有 37 也不影响
+          if [ -d /tmp/sdk37/android-37.0 ] && [ ! -f "$SDK/build-tools/37.0.0/aapt2" ]; then
+            echo "build-tools 37 not applicable on linux runner; keeping 34.0.0"
+          fi
+
+          echo "--- platforms ---"; ls "$SDK/platforms"
+          echo "--- android-37 jar ---"; ls -l "$SDK/platforms/android-37/android.jar"
+          if [ ! -f "$SDK/platforms/android-37/android.jar" ]; then
+            echo "FATAL: API 37 platform missing"; exit 1
+          fi
 
       # Windows 上提交的 gradlew 没有可执行位，这里补上并用 bash 调用
       - name: Make gradlew executable
@@ -72,11 +92,6 @@ jobs:
             echo "SIGNING_KEY_BASE64 not set, release will be signed with debug key"
           fi
 
-      - name: Apply SDK fallback (only when API 37 is missing)
-        if: env.FALLBACK_SDK == '34'
-        run: |
-          sed -i 's/compileSdk 37/compileSdk 34/; s/targetSdk 37/targetSdk 34/' app/build.gradle
-          grep -n "compileSdk\|targetSdk" app/build.gradle || true
 
       - name: Build debug APK
         run: bash ./gradlew :app:assembleDebug --no-daemon --stacktrace
