@@ -60,8 +60,14 @@ public final class ClipboardHelper {
         cm.setPrimaryClip(clip);
         lastCopied = value;
 
-        Toast.makeText(context, sensitive ? "已复制密码，用完请及时清除剪贴板" : "已复制" + label,
-                Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "已复制" + label, Toast.LENGTH_SHORT).show();
+
+        // 首次复制密码时，一次性说明输入法剪贴板的风险
+        if (sensitive && !VaultApp.get(context).prefs().getBoolean("clipboard_tip_shown", false)) {
+            if (showFirstTimeNotice(context)) {
+                VaultApp.get(context).prefs().edit().putBoolean("clipboard_tip_shown", true).apply();
+            }
+        }
 
         int seconds = VaultApp.get(context).clipboardClearSeconds();
         if (sensitive) {
@@ -72,6 +78,28 @@ public final class ClipboardHelper {
             HANDLER.removeCallbacksAndMessages("clip");
             HANDLER.postDelayed(() -> clearIfUnchanged(context), seconds * 1000L);
         }
+    }
+
+    /** 第一次复制密码时展示一次，之后不再打扰。返回是否真的弹出了提示。 */
+    private static boolean showFirstTimeNotice(final Context context) {
+        if (!(context instanceof android.app.Activity)) return false;
+        final android.app.Activity activity = (android.app.Activity) context;
+        if (activity.isFinishing() || activity.isDestroyed()) return false;
+        activity.runOnUiThread(() -> {
+            if (activity.isFinishing() || activity.isDestroyed()) return;
+            try {
+                AppDialog.alert(activity, "关于复制密码",
+                        "密码已复制到系统剪贴板，最多 15 秒后自动清空。\n\n"
+                                + "注意：剪贴板是系统共享通道，你的输入法（如微信输入法、搜狗等）"
+                                + "可以读取并保存到它自己的剪贴板历史里，本应用无法删除。\n\n"
+                                + "如果介意，可以在输入法设置中关闭「剪贴板历史/同步」，"
+                                + "或改用「查看密码」后手动输入。\n\n"
+                                + "此提示只显示一次，可在「设置 → 剪贴板风险说明」再次查看。");
+            } catch (Throwable ignored) {
+                // 弹窗失败不应影响复制本身
+            }
+        });
+        return true;
     }
 
     /** 立即清空（设置页的「立刻清除剪贴板」用）。 */

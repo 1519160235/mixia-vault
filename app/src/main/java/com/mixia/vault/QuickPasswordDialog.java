@@ -60,10 +60,6 @@ public final class QuickPasswordDialog {
             copy.setOnClickListener(v -> {
                 ClipboardHelper.copySensitive(activity, "密码", value);
                 dialog.dismiss();
-                // 复制后给出「立刻清除」的快捷入口
-                Toast.makeText(activity,
-                        "密码已复制，最多 15 秒后自动清除",
-                        Toast.LENGTH_LONG).show();
             });
         }
 

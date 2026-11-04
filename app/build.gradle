@@ -10,8 +10,8 @@ android {
         applicationId "com.mixia.vault"
         minSdk 26
         targetSdk 37
-        versionCode 8
-        versionName "1.2.1"
+        versionCode 9
+        versionName "1.2.2"
     }
 
     // 签名密钥不随公开仓库发布（.gitignore 已排除 keystore/）。
