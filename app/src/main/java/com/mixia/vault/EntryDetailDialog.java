@@ -229,7 +229,13 @@ public final class EntryDetailDialog {
             copy.setImageResource(R.drawable.ic_copy);
             copy.setColorFilter(0xFF4EC9B0);
             copy.setContentDescription("复制");
-            copy.setOnClickListener(v -> ClipboardHelper.copy(ctx, label, finalValue));
+            copy.setOnClickListener(v -> {
+                if (secret) {
+                    ClipboardHelper.copySensitive(ctx, label, finalValue);
+                } else {
+                    ClipboardHelper.copy(ctx, label, finalValue);
+                }
+            });
             row.addView(copy, new LinearLayout.LayoutParams(Ui.dp(ctx, 40), Ui.dp(ctx, 40)));
         }
     }

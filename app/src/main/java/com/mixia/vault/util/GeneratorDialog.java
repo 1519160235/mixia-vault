@@ -86,7 +86,7 @@ public final class GeneratorDialog {
         use.setOnClickListener(v -> {
             String value = output.getText().toString();
             if (value.isEmpty()) return;
-            ClipboardHelper.copy(activity, "密码", value);
+            ClipboardHelper.copySensitive(activity, "密码", value);
             if (listener != null) listener.onUse(value);
             dialog.dismiss();
         });

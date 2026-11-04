@@ -73,6 +73,12 @@ public class VaultApp extends Application implements Application.ActivityLifecyc
         return prefs().getBoolean(K_CLIPBOARD, true);
     }
 
+    /** 剪贴板自动清除的秒数；0 表示不自动清除。 */
+    public int clipboardClearSeconds() {
+        if (!clipboardClear()) return 0;
+        return prefs().getInt("clipboard_seconds", 45);
+    }
+
     public boolean biometricEnabled() {
         return prefs().getBoolean(K_BIOMETRIC, false);
     }

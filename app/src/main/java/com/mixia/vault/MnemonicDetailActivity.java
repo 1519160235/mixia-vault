@@ -89,7 +89,7 @@ public class MnemonicDetailActivity extends BaseActivity {
         btnReveal.setOnClickListener(v -> toggleReveal());
         findViewById(R.id.btnCopyWords).setOnClickListener(v -> copyMnemonic());
         findViewById(R.id.btnCopyPriv).setOnClickListener(v ->
-                ClipboardHelper.copy(this, "私钥", privText.getText().toString()));
+                ClipboardHelper.copySensitive(this, "私钥", privText.getText().toString()));
         findViewById(R.id.btnDeleteWallet).setOnClickListener(v -> confirmDelete());
 
         initialising = false;
@@ -150,7 +150,7 @@ public class MnemonicDetailActivity extends BaseActivity {
     private void copyMnemonic() {
         AppDialog.confirm(this, "复制助记词",
                 "剪贴板可能被输入法或其他应用读取。更安全的做法是抄写在纸上。",
-                "仍要复制", false, () -> ClipboardHelper.copy(this, "助记词", wallet.mnemonic));
+                "仍要复制", false, () -> ClipboardHelper.copySensitive(this, "助记词", wallet.mnemonic));
     }
 
     private void derive() {

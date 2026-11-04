@@ -2,9 +2,9 @@
 
 一个**完全离线**的 Android 密码管理器。没有网络权限，没有账号体系，没有云同步——数据只存在你的手机里。
 
-- 最低系统：Android 8.0（API 26），目标 API 34
+- 最低系统：Android 8.0（API 26），目标 API 37（Android 17）
 - 包名：`com.mixia.vault`
-- 当前版本：1.1（versionCode 2）
+- 当前版本：**1.2.0**（versionCode 7）
 
 > **下载 APK**：打开仓库的 Actions 页面 → 选最新一次成功的 `Build APK` → 页面底部 **Artifacts** 下载 `mixia-apk.zip`，解压即得 APK。
 
@@ -125,6 +125,16 @@ java -cp out TestVectors app/src/main/assets/bip39-english.txt
 - BTC Bech32 `bc1qcr8te4kr609gcawutmrza0j4xv80jy8z306fyu`
 
 ---
+
+## 免责声明
+
+完整条款见 [DISCLAIMER.md](DISCLAIMER.md)。首次启动时也会展示并需要你确认。核心几条：
+
+- **主密码无法找回**，忘记即数据永久无法解密。
+- **助记词等于钱包所有权**，泄露或丢失后果自负。
+- **剪贴板是系统共享通道**：复制密码时输入法可读取并可能留存历史，本应用无法删除其他应用的数据。
+- 不联网 ≠ 绝对安全，无法防御已 root 设备、恶意系统组件、屏幕录制或物理接触。
+- 本应用按「现状」提供，不附带任何担保，不适合存放无法承受丢失风险的资产。
 
 ## 重要提醒
 

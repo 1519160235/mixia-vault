@@ -103,7 +103,7 @@ public class VaultActivity extends BaseActivity {
                 new AppMenu.Item(R.drawable.ic_copy, "复制账号", entry.username,
                         () -> ClipboardHelper.copy(this, "账号", entry.username)),
                 new AppMenu.Item(R.drawable.ic_copy, "复制密码", "复制后 45 秒自动清空",
-                        () -> ClipboardHelper.copy(this, "密码", entry.password)),
+                        () -> ClipboardHelper.copySensitive(this, "密码", entry.password)),
                 new AppMenu.Item(R.drawable.ic_photo, "查看详情", "全部字段与照片",
                         () -> EntryDetailDialog.show(this, entry, this::refresh)),
                 new AppMenu.Item(R.drawable.ic_delete, "删除这条记录", null, true,

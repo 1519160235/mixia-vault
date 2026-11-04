@@ -17,6 +17,7 @@ import com.mixia.vault.model.Vault;
 import com.mixia.vault.model.Wallet;
 import com.mixia.vault.util.AppDialog;
 import com.mixia.vault.util.BiometricHelper;
+import com.mixia.vault.util.ClipboardHelper;
 import com.mixia.vault.util.Ui;
 
 import java.io.InputStream;
@@ -48,13 +49,13 @@ public class SettingsActivity extends BaseActivity {
         container.removeAllViews();
         addSection("安全");
         addRow("自动锁定", "离开应用后多久重新上锁", lockLabel(app.autolockSeconds()), v -> chooseAutolock());
-        addRow("剪贴板自动清除", "复制的密码 45 秒后自动清除", app.clipboardClear() ? "已开启" : "已关闭",
-                v -> {
-                    boolean next = !app.clipboardClear();
-                    app.prefs().edit().putBoolean(VaultApp.K_CLIPBOARD, next).apply();
-                    build();
-                    toast(next ? "已开启剪贴板清除" : "已关闭剪贴板清除");
-                });
+        addRow("剪贴板自动清除", clipboardSummary(), app.clipboardClear() ? "已开启" : "已关闭",
+                v -> chooseClipboardSeconds());
+        addRow("立刻清除剪贴板", "清空系统剪贴板里的内容", "", v -> {
+            ClipboardHelper.clearNow(this);
+            toast("已清除系统剪贴板");
+        });
+        addRow("剪贴板风险说明", "为什么输入法可能仍留有记录", "", v -> showClipboardRisk());
         if (BiometricHelper.isAvailable(this)) {
             addRow("指纹解锁", "用指纹代替输入主密码", app.biometricEnabled() ? "已开启" : "已关闭",
                     v -> toggleBiometric());
@@ -104,6 +105,40 @@ public class SettingsActivity extends BaseActivity {
         if (listener != null) row.setOnClickListener(listener);
         else row.findViewById(R.id.setChevron).setVisibility(View.GONE);
         container.addView(row);
+    }
+
+    private String clipboardSummary() {
+        int secs = app.clipboardClearSeconds();
+        if (secs <= 0) return "不会自动清除";
+        return "复制的密码 " + Math.min(secs, 15) + " 秒后自动清除，其他内容 " + secs + " 秒";
+    }
+
+    private void chooseClipboardSeconds() {
+        final String[] labels = {"关闭", "15 秒", "45 秒", "2 分钟"};
+        final int[] values = {0, 15, 45, 120};
+        int current = 2;
+        for (int i = 0; i < values.length; i++) {
+            if (values[i] == app.clipboardClearSeconds()) current = i;
+        }
+        AppDialog.singleChoice(this, "剪贴板自动清除", labels, current, index -> {
+            app.prefs().edit()
+                    .putBoolean(VaultApp.K_CLIPBOARD, values[index] > 0)
+                    .putInt("clipboard_seconds", values[index])
+                    .apply();
+            build();
+        });
+    }
+
+    private void showClipboardRisk() {
+        AppDialog.alert(this, "剪贴板说明",
+                "复制密码时，内容会进入系统剪贴板。当前获得焦点的输入法可以合法读取它，"
+                        + "并可能保存在输入法自己的剪贴板历史里——那是别的应用的私有数据，本应用无法删除。\n\n"
+                        + "本应用能做的：\n"
+                        + "· 标记为敏感内容（Android 13+ 系统浮层不预览）\n"
+                        + "· 密码复制后最多 15 秒自动清空系统剪贴板\n"
+                        + "· 提供「立刻清除剪贴板」\n\n"
+                        + "如果你的输入法会自动记录剪贴板，建议在输入法设置里关闭「剪贴板历史」，"
+                        + "或改用「查看模式」手动输入密码。");
     }
 
     private String lockLabel(int seconds) {

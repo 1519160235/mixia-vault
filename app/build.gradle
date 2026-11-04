@@ -4,14 +4,14 @@ plugins {
 
 android {
     namespace 'com.mixia.vault'
-    compileSdk 34
+    compileSdk 37
 
     defaultConfig {
         applicationId "com.mixia.vault"
         minSdk 26
-        targetSdk 34
-        versionCode 5
-        versionName "1.1.3"
+        targetSdk 37
+        versionCode 7
+        versionName "1.2.0"
     }
 
     // 签名密钥不随公开仓库发布（.gitignore 已排除 keystore/）。

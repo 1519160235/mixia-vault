@@ -12,6 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mixia.vault.model.Entry;
 import com.mixia.vault.util.AppDialog;
@@ -57,10 +58,21 @@ public final class QuickPasswordDialog {
                 eye.setImageResource(shown[0] ? R.drawable.ic_eye_off : R.drawable.ic_eye);
             });
             copy.setOnClickListener(v -> {
-                ClipboardHelper.copy(activity, "密码", value);
+                ClipboardHelper.copySensitive(activity, "密码", value);
                 dialog.dismiss();
+                // 复制后给出「立刻清除」的快捷入口
+                Toast.makeText(activity,
+                        "密码已复制，最多 15 秒后自动清除",
+                        Toast.LENGTH_LONG).show();
             });
         }
+
+        View clearClip = dialog.findViewById(R.id.quickClearClip);
+        clearClip.setOnClickListener(v -> {
+            ClipboardHelper.clearNow(activity);
+            Toast.makeText(activity, "已清除系统剪贴板", Toast.LENGTH_SHORT).show();
+        });
+        PressFeedback.attach(clearClip);
 
         close.setOnClickListener(v -> dialog.dismiss());
         PressFeedback.attach(copy);
