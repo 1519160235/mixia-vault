@@ -71,23 +71,36 @@ jobs:
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
         run: bash ./gradlew :app:assembleRelease --no-daemon --stacktrace
 
+      # 收集产物：正式包与调试包分开，避免 Release 里出现两个同版本号的 APK
       - name: Collect artifacts
         run: |
-          mkdir -p out
-          find app/build/outputs/apk -name '*.apk' -exec cp {} out/ \;
-          ls -lh out
+          mkdir -p out/release out/debug
+          find app/build/outputs/apk/release -name '*.apk' -exec cp {} out/release/ \; 2>/dev/null || true
+          find app/build/outputs/apk/debug -name '*.apk' -exec cp {} out/debug/ \; 2>/dev/null || true
+          echo "== release =="; ls -lh out/release || true
+          echo "== debug =="; ls -lh out/debug || true
 
-      - name: Upload APKs
+      - name: Upload debug APK (artifact only)
         uses: actions/upload-artifact@v4
         with:
-          name: mixia-apk
-          path: out/*.apk
+          name: mixia-debug
+          path: out/debug/*.apk
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Upload release APK (artifact)
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: mixia-release
+          path: out/release/*.apk
           if-no-files-found: error
           retention-days: 90
 
-      - name: Attach APK to release
+      # Release 页面只挂正式包：更新器（Obtainium 等）只会看到唯一一个 APK
+      - name: Attach release APK to GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: out/*.apk
+          files: out/release/*.apk
           generate_release_notes: true

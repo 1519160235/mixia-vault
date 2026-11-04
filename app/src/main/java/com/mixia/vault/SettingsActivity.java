@@ -68,7 +68,7 @@ public class SettingsActivity extends BaseActivity {
         addRow("清空保险库", "删除全部记录，无法恢复", "", v -> wipeEverything());
 
         addSection("关于");
-        addRow("密匣 1.1.1", "纯本地密码管理器", "", v -> showAbout());
+        addRow("密匣 " + versionName(), "纯本地密码管理器 · 不联网", "", v -> showAbout());
         addRow("加密方式", "AES-256-GCM · PBKDF2-HMAC-SHA256 250,000 次", "", v -> showCrypto());
         addRow("网络权限", "未申请 INTERNET 权限，物理上无法联网", "无网络", null);
     }
@@ -353,8 +353,17 @@ public class SettingsActivity extends BaseActivity {
                 }));
     }
 
+    /** Real installed version, read from the package manager. */
+    private String versionName() {
+        try {
+            return getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
     private void showAbout() {
-        AppDialog.alert(this, "密匣 1.1.1",
+        AppDialog.alert(this, "密匣 " + versionName(),
                 "一个不联网的本地密码管理器。\n\n"
                         + "· 密码、账号、Wi-Fi、银行卡、服务器信息\n"
                         + "· 照片附件（同样加密存放）\n"
