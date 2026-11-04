@@ -339,8 +339,8 @@ public class SettingsActivity extends BaseActivity {
 
     private void wipeEverything() {
         AppDialog.confirm(this, "清空保险库",
-                "所有密码、照片与助记词将被永久删除，且无法恢复。确定继续？", "我已备份，继续", true,
-                () -> AppDialog.confirm(this, "最后确认", "真的要删除全部数据吗？", "永久删除", true, () -> {
+                "所有密码、照片与助记词都会被永久删除，无法恢复。请确认你已有备份。", "我已备份，继续", true,
+                () -> AppDialog.confirm(this, "最后确认", "删除后无法恢复，确定要永久删除全部数据吗？", "永久删除", true, () -> {
                     app.store().wipe();
                     com.mixia.vault.data.PhotoStore.deleteAll(this);
                     BiometricHelper.clear(this);

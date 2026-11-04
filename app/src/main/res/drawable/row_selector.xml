@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ListView 的行选中背景：圆角、贴合卡片，按下/长按都有反馈 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="#2A3A4E" />
+            <corners android:radius="18dp" />
+            <stroke android:width="1dp" android:color="@color/accent_dark" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <solid android:color="#00000000" />
+            <corners android:radius="18dp" />
+        </shape>
+    </item>
+</selector>

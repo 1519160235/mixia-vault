@@ -63,7 +63,7 @@
                 style="@style/LabelText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="类型" />
+                android:text="分类" />
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -88,7 +88,7 @@
                 style="@style/FieldEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="例如：微信、公司邮箱"
+                android:hint="例如：微信、公司邮箱、家里宽带"
                 android:importantForAutofill="no"
                 android:inputType="text" />
 
@@ -183,7 +183,7 @@
                 style="@style/LabelText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="照片（密码截图 / 恢复码 / 二维码）" />
+                android:text="照片（截图 / 恢复码 / 二维码）" />
 
             <HorizontalScrollView
                 android:layout_width="match_parent"

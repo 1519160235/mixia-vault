@@ -83,14 +83,14 @@
                 style="@style/LabelText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="密码提示（可选）" />
+                android:text="主密码提示（可选）" />
 
             <EditText
                 android:id="@+id/hintInput"
                 style="@style/FieldEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="只在连续输错后显示"
+                android:hint="忘记密码时的线索，只有你能看懂"
                 android:importantForAutofill="no"
                 android:inputType="text" />
 

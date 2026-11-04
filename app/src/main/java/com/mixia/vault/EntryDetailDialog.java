@@ -85,7 +85,7 @@ public final class EntryDetailDialog {
 
         TextView edit = new TextView(activity);
         edit.setBackgroundResource(R.drawable.btn_ghost);
-        edit.setText("编辑");
+        edit.setText("编辑记录");
         edit.setGravity(Gravity.CENTER);
         edit.setTextColor(0xFFE9EEF8);
         edit.setTextSize(15);
@@ -97,7 +97,7 @@ public final class EntryDetailDialog {
 
         TextView delete = new TextView(activity);
         delete.setBackgroundResource(R.drawable.btn_danger_solid);
-        delete.setText("删除");
+        delete.setText("删除记录");
         delete.setGravity(Gravity.CENTER);
         delete.setTextColor(0xFFFFFFFF);
         delete.setTextSize(15);

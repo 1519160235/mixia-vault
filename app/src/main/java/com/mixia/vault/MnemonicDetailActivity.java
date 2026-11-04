@@ -148,7 +148,7 @@ public class MnemonicDetailActivity extends BaseActivity {
     }
 
     private void copyMnemonic() {
-        AppDialog.confirm(this, "复制助记词？",
+        AppDialog.confirm(this, "复制助记词",
                 "剪贴板可能被输入法或其他应用读取。更安全的做法是抄写在纸上。",
                 "仍要复制", false, () -> ClipboardHelper.copy(this, "助记词", wallet.mnemonic));
     }

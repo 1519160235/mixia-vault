@@ -79,9 +79,13 @@ public final class GeneratorDialog {
         }
 
         dialog.findViewById(R.id.btnRegen).setOnClickListener(v -> generate.run());
+
+        // 主按钮：编辑页调用时填入并复制；首页直接打开时只复制
         Button use = dialog.findViewById(R.id.btnCopyGen);
+        use.setText(listener != null ? "使用这个密码" : "复制密码");
         use.setOnClickListener(v -> {
             String value = output.getText().toString();
+            if (value.isEmpty()) return;
             ClipboardHelper.copy(activity, "密码", value);
             if (listener != null) listener.onUse(value);
             dialog.dismiss();

@@ -59,6 +59,25 @@ public class EntryAdapter extends BaseAdapter {
             holder.category = convertView.findViewById(R.id.categoryText);
             holder.star = convertView.findViewById(R.id.starIcon);
             convertView.setTag(holder);
+            // 按下时轻微缩放：仅做视觉反馈，return false 保证 ListView 的单击/长按仍能被识别
+            convertView.setOnTouchListener((v, event) -> {
+                switch (event.getActionMasked()) {
+                    case android.view.MotionEvent.ACTION_DOWN:
+                        v.animate().cancel();
+                        v.animate().scaleX(0.985f).scaleY(0.985f).alpha(0.9f)
+                                .setDuration(70).start();
+                        break;
+                    case android.view.MotionEvent.ACTION_UP:
+                    case android.view.MotionEvent.ACTION_CANCEL:
+                        v.animate().cancel();
+                        v.animate().scaleX(1f).scaleY(1f).alpha(1f)
+                                .setDuration(140).start();
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            });
         } else {
             holder = (ViewHolder) convertView.getTag();
         }

@@ -170,7 +170,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:text="重新计算地址" />
+                android:text="按此路径重新计算" />
 
             <TextView
                 android:id="@+id/statusText"
