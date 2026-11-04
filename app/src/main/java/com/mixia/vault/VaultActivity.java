@@ -106,7 +106,7 @@ public class VaultActivity extends BaseActivity {
                         () -> ClipboardHelper.copy(this, "密码", entry.password)),
                 new AppMenu.Item(R.drawable.ic_photo, "查看详情", "全部字段与照片",
                         () -> EntryDetailDialog.show(this, entry, this::refresh)),
-                new AppMenu.Item(R.drawable.ic_delete, "删除这条记录", "需要二次确认", true,
+                new AppMenu.Item(R.drawable.ic_delete, "删除这条记录", null, true,
                         () -> confirmDelete(entry)));
     }
 

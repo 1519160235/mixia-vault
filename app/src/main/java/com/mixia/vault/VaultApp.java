@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 
 import com.mixia.vault.core.AesGcm;
 import com.mixia.vault.core.Bip39;
@@ -96,6 +97,7 @@ public class VaultApp extends Application implements Application.ActivityLifecyc
         this.vault = v;
         this.vaultFile = vf;
         this.unlocked = true;
+        markForeground();
     }
 
     public void lock() {
@@ -166,9 +168,17 @@ public class VaultApp extends Application implements Application.ActivityLifecyc
 
     // ---- auto lock ----
 
+    /**
+     * 进入后台的时刻（elapsedRealtime）。为 0 表示当前在前台。
+     * 用时间戳而不是定时器：定时器到点后无法在后台启动 Activity（Android 10+ 限制），
+     * 会导致「回桌面再打开不上锁」。改为回前台时比对时间差，结果稳定可靠。
+     */
+    private long backgroundedAt = 0;
+    private int startedCount = 0;
+
     @Override
     public void onActivityStarted(Activity activity) {
-        started++;
+        startedCount++;
         if (lockRunnable != null) {
             handler.removeCallbacks(lockRunnable);
             lockRunnable = null;
@@ -177,24 +187,44 @@ public class VaultApp extends Application implements Application.ActivityLifecyc
 
     @Override
     public void onActivityStopped(Activity activity) {
-        started--;
-        if (started <= 0 && unlocked) {
-            started = 0;
-            scheduleLock();
+        startedCount--;
+        if (startedCount < 0) startedCount = 0;
+        if (startedCount == 0) {
+            // 真正进入后台了
+            if (unlocked) {
+                backgroundedAt = SystemClock.elapsedRealtime();
+                scheduleLock();
+            }
         }
     }
 
+    /** 回到前台时是否需要立刻上锁。 */
+    public boolean shouldLockOnReturn() {
+        if (!unlocked) return true;
+        if (backgroundedAt <= 0) return false;
+        long elapsed = SystemClock.elapsedRealtime() - backgroundedAt;
+        long threshold = Math.max(0, autolockSeconds()) * 1000L;
+        return elapsed >= threshold;
+    }
+
+    /** 标记已经回到前台，重新开始计时。 */
+    public void markForeground() {
+        backgroundedAt = 0;
+        if (lockRunnable != null) {
+            handler.removeCallbacks(lockRunnable);
+            lockRunnable = null;
+        }
+    }
+
+    /** 后台计时：到点只清空内存中的明文，不尝试启动界面（后台启动会被系统拦截）。 */
     private void scheduleLock() {
         if (lockRunnable != null) handler.removeCallbacks(lockRunnable);
         int secs = autolockSeconds();
         lockRunnable = new Runnable() {
             @Override
             public void run() {
-                if (started <= 0 && unlocked) {
+                if (startedCount == 0 && unlocked) {
                     lock();
-                    Intent intent = new Intent(VaultApp.this, LockActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
                 }
             }
         };

@@ -84,14 +84,34 @@ public class BaseActivity extends Activity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        VaultApp app = VaultApp.get(this);
+        if (!(this instanceof LockActivity)) {
+            // 回到前台：按「离开时长」判断是否需要重新解锁
+            if (!app.isUnlocked() || app.shouldLockOnReturn()) {
+                if (app.isUnlocked()) app.lock();
+                goToLockScreen();
+                return;
+            }
+            app.markForeground();
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        if (!(this instanceof LockActivity) && !VaultApp.get(this).isUnlocked()) {
-            Intent intent = new Intent(this, LockActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
+        VaultApp app = VaultApp.get(this);
+        if (!(this instanceof LockActivity) && !app.isUnlocked()) {
+            goToLockScreen();
         }
+    }
+
+    private void goToLockScreen() {
+        Intent intent = new Intent(this, LockActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 
     protected void toast(String message) {
